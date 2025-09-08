@@ -224,14 +224,16 @@ export default function Chat() {
         }
     };
 
-    const safeHtml = DOMPurify.sanitize(formattedContent, {
-        ALLOWED_TAGS: ["strong", "em", "p", "ul", "ol", "li", "img", "code", "pre", "br", "div", "span"],
-        ALLOWED_ATTR: ["src", "alt", "class", "loading"]
-    });
+
 
     // Component to render formatted message content
     const MessageContent = ({ content, isStreaming = false }: { content: string; isStreaming?: boolean }) => {
         const formattedContent = formatResponse(content);
+
+        const safeHtml = DOMPurify.sanitize(formattedContent, {
+            ALLOWED_TAGS: ["strong", "em", "p", "ul", "ol", "li", "img", "code", "pre", "br", "div", "span"],
+            ALLOWED_ATTR: ["src", "alt", "class", "loading"]
+        });
 
         return (
             <div
