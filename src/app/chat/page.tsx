@@ -1,5 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import DOMPurify from "dompurify";
+
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -222,6 +224,11 @@ export default function Chat() {
         }
     };
 
+    const safeHtml = DOMPurify.sanitize(formattedContent, {
+        ALLOWED_TAGS: ["strong", "em", "p", "ul", "ol", "li", "img", "code", "pre", "br", "div", "span"],
+        ALLOWED_ATTR: ["src", "alt", "class", "loading"]
+    });
+
     // Component to render formatted message content
     const MessageContent = ({ content, isStreaming = false }: { content: string; isStreaming?: boolean }) => {
         const formattedContent = formatResponse(content);
@@ -229,7 +236,7 @@ export default function Chat() {
         return (
             <div
                 className="prose prose-sm max-w-none dark:prose-invert prose-headings:text-inherit prose-p:text-inherit prose-strong:text-inherit prose-em:text-inherit prose-code:text-inherit prose-pre:bg-gray-100 dark:prose-pre:bg-gray-800"
-                dangerouslySetInnerHTML={{ __html: formattedContent }}
+                dangerouslySetInnerHTML={{ __html: safeHtml }}
             />
         );
     };
